@@ -10,11 +10,29 @@ import { useTheme } from "next-themes";
 import { name, showResume } from "../data/portfolio.json";
 import { resume } from "../data/portfolio.json";
 import data from "../data/portfolio.json";
+//Display pdf
+import { Document } from "react-pdf";
 
 const Resume = () => {
   const router = useRouter();
   const theme = useTheme();
   const [mount, setMount] = useState(false);
+
+  const onResButtonClick = () => {
+    // using Java Script method to get PDF file
+    fetch('Evan_Clark_Resume.pdf').then(response => {
+        response.blob().then(blob => {
+            // Creating new object of PDF file
+            const fileURL = window.URL.createObjectURL(blob);
+            // Setting various property values
+            let alink = document.createElement('a');
+            alink.href = fileURL;
+            alink.download = 'Evan_Clark_Resume.pdf';
+            alink.click();
+        })
+    })
+}
+
 
   useEffect(() => {
     setMount(true);
@@ -31,12 +49,20 @@ const Resume = () => {
           </Button>
         </div>
       )}
+
+      <button className="fixed bottom-6 left-6" onClick={onResButtonClick}>
+        <Button onClick={onResButtonClick} type={"primary"}>
+          Download Full Resume
+        </Button>
+      </button>
+
       {data.showCursor && <Cursor />}
       <div
         className={`container mx-auto mb-10 ${
           data.showCursor && "cursor-none"
         }`}
       >
+
         <Header isBlog />
         {mount && (
           <div className="mt-10 w-full flex flex-col items-center">
